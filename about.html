@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>About Us - Majestic Borewells</title>
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    :root {
+      --primary-color: #3D8D7A;
+      --secondary-color: #B3D8A8;
+      --accent-color: #F4960F;
+      --background-light: #FBFFE4;
+      --text-color: #333;
+    }
+
+    body {
+      background: #f2f2f2;
+      color: var(--text-color);
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    nav {
+      background: rgba(61, 141, 122, 0.95);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+    .nav-logo span {
+      color: var(--accent-color);
+    }
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    nav a:not(.nav-logo)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    nav a:not(.nav-logo):hover::after {
+      width: 80%;
+    }
+    nav a:not(.nav-logo):hover {
+      color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    @media (max-width: 768px) {
+      nav {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      nav a {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+      }
+    }
+
+    .about-section {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: #FBFFE4;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .about-section h2 {
+      color: #3D8D7A;
+      margin-bottom: 20px;
+      text-align: center;
+      background: #B3D8A8;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .about-section p {
+      margin-bottom: 20px;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    footer {
+      background: #3D8D7A;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/home.html" class="nav-logo">
+      <span>Majestic</span> Borewells
+    </a>
+    <div class="nav-links">
+      <a href="/booking.html">Booking</a>
+      <a href="/FAQ.html">FAQ</a>
+      <a href="/about.html">About</a>
+    </div>
+  </nav>
+
+  <section class="about-section">
+    <h2>Our Legacy of Excellence</h2>
+    <p>
+      Majestic Borewells stands as a beacon of trust and innovation in groundwater solutions. 
+      With over three and a half decades of unparalleled experience, we have transformed 
+      water accessibility across Tirupati through cutting-edge drilling technologies and 
+      unwavering commitment to quality.
+    </p>
+    <p>
+      Our journey began with a simple mission: to provide reliable and efficient borewell 
+      solutions tailored to the unique geological conditions of Tirupati. Over the years, we 
+      have grown into a respected name in the industry, known for our integrity, expertise, and 
+      customer-first approach.
+    </p>
+    <h2>State-of-the-Art Technology</h2>
+    <p>
+      At Majestic Borewells, we leverage state-of-the-art rigs and drilling equipment to 
+      tackle even the most challenging terrains. Our fleet is meticulously maintained and 
+      upgraded to ensure swift, efficient, and precise borewell installations.
+    </p>
+    <h2>Our Commitment to Quality</h2>
+    <p>
+      Every project we undertake is a testament to our unwavering commitment to quality and 
+      precision. From initial site assessment to post-installation support, our team works 
+      closely with customers, ensuring transparency, timely completion, and long-lasting results.
+    </p>
+    <h2>Why Choose Us?</h2>
+    <p>
+      - 35+ years of drilling expertise<br>
+      - State-of-the-art machinery and technology<br>
+      - Customized solutions for every terrain<br>
+      - Timely completion and hassle-free service<br>
+      - Customer-centric approach and transparent pricing
+    </p>
+  </section>
+
+  <footer>
+    &copy; 2025 Majestic Borewells. All rights reserved.
+  </footer>
+
+</body>
+</html>
+

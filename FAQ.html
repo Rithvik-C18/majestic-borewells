@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ & Queries - Majestic Borewells</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        :root {
+            --primary-color: #3D8D7A;
+            --secondary-color: #B3D8A8;
+            --accent-color: #F4960F;
+            --background-light: #FBFFE4;
+            --text-color: #333;
+        }
+
+        body {
+            background: #f2f2f2;
+            color: var(--text-color);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: rgba(61, 141, 122, 0.95);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-logo span {
+            color: var(--accent-color);
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        nav a:not(.nav-logo)::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        nav a:not(.nav-logo):hover::after {
+            width: 80%;
+        }
+        nav a:not(.nav-logo):hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .faq-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .faq-question:hover {
+            background: #2c6b5a;
+        }
+
+        .faq-answer {
+            padding: 20px;
+            display: none;
+            background: white;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .faq-answer p {
+            margin-bottom: 10px;
+        }
+
+        .faq-answer ul {
+            list-style-position: inside;
+            margin-left: 20px;
+        }
+
+        /* Query Form Section */
+        .query-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .query-section h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .query-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #2c6b5a;
+        }
+
+        /* Footer */
+        footer {
+            background: #3D8D7A;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .query-section {
+                margin: 40px 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="/home.html" class="nav-logo">
+            <span>Majestic</span> Borewells
+        </a>
+        <div class="nav-links">
+            <a href="/booking.html">Booking</a>
+            <a href="/FAQ.html">FAQ</a>
+            <a href="/about.html">About</a>
+        </div>
+    </nav>
+
+    <!-- FAQ Section -->
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common questions about our borewell drilling services and solutions.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                What is the typical duration for borewell drilling?
+                <span class="toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>The duration varies depending on several factors:</p>
+                <ul>
+                    <li>Soil type and geological conditions</li>
+                    <li>Required depth of the borewell</li>
+                    <li>Location accessibility</li>
+                    <li>Weather conditions</li>
+                </ul>
+                <p>Generally, a standard borewell can be completed within 2-3 days, while more complex projects may take up to a week.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                How do you determine the right location for drilling?
+                <span class="toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>We follow a comprehensive process to determine the optimal drilling location:</p>
+                <ul>
+                    <li>Geological survey of the area</li>
+                    <li>Water table analysis</li>
+                    <li>Soil testing</li>
+                    <li>Distance from existing structures</li>
+                    <li>Accessibility for drilling equipment</li>
+                </ul>
+                <p>Our experts use advanced technology and years of experience to ensure the best possible location for your borewell.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                What is your pricing structure?
+                <span class="toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Our pricing is based on several factors:</p>
+                <ul>
+                    <li>Depth of the borewell</li>
+                    <li>Type of soil and rock formation</li>
+                    <li>Additional services required</li>
+                    <li>Location and accessibility</li>
+                </ul>
+                <p>We offer transparent pricing with no hidden costs. Contact us for a detailed quote based on your specific requirements.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Do you provide maintenance services?
+                <span class="toggle">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, we offer comprehensive maintenance services including:</p>
+                <ul>
+                    <li>Regular cleaning and maintenance</li>
+                    <li>Water quality testing</li>
+                    <li>Pump servicing and repairs</li>
+                    <li>24/7 emergency support</li>
+                </ul>
+                <p>We recommend annual maintenance to ensure optimal performance and longevity of your borewell.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Query Form Section -->
+    <section class="query-section">
+        <h2>Have More Questions?</h2>
+        <form class="query-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="query">Your Query</label>
+                <textarea id="query" name="query" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Submit Query</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 Majestic Borewells. All rights reserved.
+    </footer>
+
+    <script>
+        // FAQ Toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.toggle');
+                
+                // Close all other answers
+                document.querySelectorAll('.faq-answer').forEach(item => {
+                    if (item !== answer) {
+                        item.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current answer
+                answer.classList.toggle('active');
+                toggle.textContent = answer.classList.contains('active') ? '−' : '+';
+            });
+        });
+
+        // Add query form submission handler
+        document.querySelector('.query-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const queryText = document.getElementById('query').value;
+            
+            // Create query object with timestamp
+            const queryData = {
+                name,
+                email,
+                phone,
+                query: queryText,
+                date: new Date().toLocaleString(),
+                status: 'pending'
+            };
+            
+            // Show loading state
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = 'Submitting...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Send query to database API
+                const response = await fetch('http://localhost:3000/api/queries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(queryData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Query saved to database:', result);
+                
+                // Show success message
+                showSuccessMessage(name, email, phone);
+                
+                // Reset form
+                this.reset();
+            } catch (error) {
+                console.error('Error saving query to server:', error);
+                alert('Error submitting query: ' + error.message + '. Please try again later.');
+            } finally {
+                // Reset button state
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Function to show success message
+        function showSuccessMessage(name, email, phone) {
+            const form = document.querySelector('.query-form');
+            const formContainer = form.parentElement;
+            
+            // Create success message element
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.style.backgroundColor = '#f0f9f4';
+            successMessage.style.padding = '20px';
+            successMessage.style.borderRadius = '8px';
+            successMessage.style.marginTop = '30px';
+            successMessage.style.textAlign = 'center';
+            successMessage.style.border = '2px solid var(--primary-color)';
+            
+            successMessage.innerHTML = `
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">Query Submitted Successfully!</h3>
+                <p style="margin-bottom: 15px;">Thank you for reaching out to us, <strong>${name}</strong>.</p>
+                <p><strong>Your query will be addressed shortly.</strong></p>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #666;">Our team will contact you at ${email} or ${phone}.</p>
+                <p style="margin-top: 20px;"><a href="admin.html" style="color: var(--primary-color); text-decoration: underline;">View in Admin Panel</a> (Admin access only)</p>
+            `;
+            
+            // Hide the form and show success message
+            form.style.display = 'none';
+            formContainer.appendChild(successMessage);
+            
+            // Add button to submit another query
+            const newQueryBtn = document.createElement('button');
+            newQueryBtn.className = 'submit-btn';
+            newQueryBtn.style.marginTop = '20px';
+            newQueryBtn.innerText = 'Submit Another Query';
+            newQueryBtn.addEventListener('click', function() {
+                // Remove success message
+                formContainer.removeChild(successMessage);
+                formContainer.removeChild(newQueryBtn);
+                
+                // Reset and show form
+                form.reset();
+                form.style.display = 'grid';
+            });
+            
+            formContainer.appendChild(newQueryBtn);
+        }
+    </script>
+</body>
+</html>

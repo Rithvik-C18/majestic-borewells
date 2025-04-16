@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Majestic Borewells</title>
+    <style>
+        :root {
+            --primary-color: #3D8D7A;
+            --secondary-color: #B3D8A8;
+            --accent-color: #F4960F;
+            --background-light: #FBFFE4;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f2f2f2;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin: 30px 0 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .reply-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pending {
+            background: #ffeeba;
+            color: #856404;
+        }
+
+        .completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .in-progress {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .status-select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <div style="margin-bottom: 20px; text-align: right;">
+            <a href="../../../FAQ.html" style="color: var(--primary-color); text-decoration: none; margin-right: 20px;">Back to FAQ</a>
+            <a href="../../../home.html" style="color: var(--primary-color); text-decoration: none;">Home</a>
+        </div>
+        
+        <h2>All Bookings</h2>
+        <table id="bookingsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Address</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Service</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Booking entries will be populated here -->
+            </tbody>
+        </table>
+
+        <h2>Customer Queries</h2>
+        <table id="queriesTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Query</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Query entries will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to fetch and display bookings
+        async function fetchBookings() {
+            try {
+                const response = await fetch('http://localhost:3000/api/bookings');
+                const bookings = await response.json();
+                const tbody = document.querySelector('#bookingsTable tbody');
+                tbody.innerHTML = '';
+                
+                if (bookings.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="no-data">No bookings found</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${booking._id}</td>
+                        <td>${booking.address}</td>
+                        <td>${new Date(booking.date).toLocaleDateString()}</td>
+                        <td>${booking.time}</td>
+                        <td>${booking.service}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching bookings:', error);
+                const tbody = document.querySelector('#bookingsTable tbody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="no-data">Error loading bookings. Server might be offline.</td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Function to load and display queries
+        async function loadQueries() {
+            const queriesContainer = document.querySelector('#queriesTable tbody');
+            
+            try {
+                // Show loading indicator
+                queriesContainer.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="no-data">Loading queries from database...</td>
+                    </tr>
+                `;
+                
+                // Fetch queries from the API
+                const response = await fetch('http://localhost:3000/api/queries');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const queries = await response.json();
+                console.log('Queries fetched from database:', queries);
+                
+                if (queries.length === 0) {
+                    queriesContainer.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="no-data">No queries found in database</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Display queries in the table
+                queriesContainer.innerHTML = queries.map((query, index) => `
+                    <tr>
+                        <td>${query.name}</td>
+                        <td>${query.email}</td>
+                        <td>${query.phone}</td>
+                        <td>${query.query}</td>
+                        <td>${query.date}</td>
+                        <td>
+                            <select class="status-select" onchange="updateQueryStatus('${query._id}', this.value)">
+                                <option value="pending" ${query.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="in-progress" ${query.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="completed" ${query.status === 'completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="action-btn reply-btn" onclick="replyToQuery('${query.email}')">Reply</button>
+                            <button class="action-btn delete-btn" onclick="deleteQuery('${query._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error fetching queries:', error);
+                queriesContainer.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="no-data">
+                            Error loading queries: ${error.message}<br>
+                            <button onclick="loadQueries()" class="action-btn" style="margin-top: 10px;">Try Again</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Function to update query status
+        async function updateQueryStatus(id, status) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/queries/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                console.log('Query status updated successfully');
+                
+                // Refresh queries to show updated status
+                loadQueries();
+            } catch (error) {
+                console.error('Error updating query status:', error);
+                alert(`Failed to update status: ${error.message}`);
+            }
+        }
+
+        // Function to delete a query
+        async function deleteQuery(id) {
+            if (confirm('Are you sure you want to delete this query?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/queries/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    console.log('Query deleted successfully');
+                    
+                    // Refresh queries to remove deleted one
+                    loadQueries();
+                } catch (error) {
+                    console.error('Error deleting query:', error);
+                    alert(`Failed to delete query: ${error.message}`);
+                }
+            }
+        }
+
+        // Function to reply to a query via email
+        function replyToQuery(email) {
+            window.location.href = `mailto:${email}`;
+        }
+
+        // Check API status
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch('http://localhost:3000/api/status');
+                if (response.ok) {
+                    const status = await response.json();
+                    console.log('API Status:', status);
+                    
+                    if (status.database !== 'connected') {
+                        console.error('Database is not connected. Status:', status.database);
+                        alert('Warning: Database is not connected. Some features may not work properly.');
+                    }
+                }
+            } catch (error) {
+                console.error('API Status Check Failed:', error);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Admin page loaded');
+            checkAPIStatus();
+            loadQueries();
+            fetchBookings();
+            
+            // Refresh data every 60 seconds
+            setInterval(() => {
+                loadQueries();
+                fetchBookings();
+            }, 60000);
+        });
+    </script>
+</body>
+</html>
