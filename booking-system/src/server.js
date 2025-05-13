@@ -9,7 +9,7 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/majestic-borewells', {
+mongoose.connect('mongodb://localhost:27017/majestic_borewells', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

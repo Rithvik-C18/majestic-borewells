@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
             --background-light: #FBFFE4;
             --text-color: #333;
         }
+
         body {
             margin: 0;
             background: var(--background-light);
@@ -20,18 +22,20 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
+
         nav {
             background: rgba(61, 141, 122, 0.95);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(10px);
         }
+
         .nav-logo {
             display: flex;
             align-items: center;
@@ -41,13 +45,16 @@
             text-decoration: none;
             letter-spacing: 1px;
         }
+
         .nav-logo span {
             color: var(--accent-color);
         }
+
         .nav-links {
             display: flex;
             gap: 30px;
         }
+
         nav a {
             color: #fff;
             text-decoration: none;
@@ -58,6 +65,7 @@
             transition: all 0.3s ease;
             position: relative;
         }
+
         nav a:not(.nav-logo)::after {
             content: '';
             position: absolute;
@@ -69,35 +77,42 @@
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
+
         nav a:not(.nav-logo):hover::after {
             width: 80%;
         }
+
         nav a:not(.nav-logo):hover {
             color: var(--accent-color);
             background: rgba(255, 255, 255, 0.1);
         }
+
         @media (max-width: 768px) {
             nav {
                 padding: 15px;
                 flex-direction: column;
                 gap: 15px;
             }
+
             .nav-links {
                 gap: 15px;
                 flex-wrap: wrap;
                 justify-content: center;
             }
+
             nav a {
                 font-size: 0.9rem;
                 padding: 6px 12px;
             }
         }
+
         .container {
             display: flex;
             height: 80vh;
             margin: 20px;
             align-items: center;
         }
+
         #map-container {
             width: 45%;
             height: 80%;
@@ -107,11 +122,13 @@
             border-radius: 10px;
             box-sizing: border-box;
         }
+
         #map {
             width: 100%;
             height: 100%;
             border-radius: 5px;
         }
+
         #form-container {
             width: 45%;
             display: flex;
@@ -122,16 +139,21 @@
             margin: auto;
             border-radius: 10px;
         }
+
         form {
             width: 100%;
             max-width: 400px;
         }
+
         h1 {
             text-align: center;
             color: rgb(1, 40, 1);
             margin-bottom: 20px;
         }
-        input, select, button {
+
+        input,
+        select,
+        button {
             width: 100%;
             padding: 12px;
             margin-top: 15px;
@@ -139,6 +161,7 @@
             border-radius: 5px;
             font-size: 16px;
         }
+
         button {
             background: var(--primary-color);
             color: white;
@@ -146,9 +169,11 @@
             border: none;
             transition: background 0.2s;
         }
+
         button:hover {
             background: var(--accent-color);
         }
+
         #confirmation {
             text-align: center;
             margin-top: 20px;
@@ -157,6 +182,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav>
         <a href="/home.html" class="nav-logo">
@@ -234,26 +260,9 @@
                 confirmation.style.color = 'var(--primary-color)';
                 confirmation.innerText = 'Processing your booking...';
 
-                // First, test server connectivity
-                try {
-                    const testResponse = await fetch('http://localhost:3000/api/network-test', {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' },
-                        // Set a timeout
-                        signal: AbortSignal.timeout(5000)
-                    });
-                    
-                    if (!testResponse.ok) {
-                        throw new Error(`Connection test failed: ${testResponse.status}`);
-                    }
-                    console.log('Connection test successful, proceeding with booking');
-                } catch (testError) {
-                    console.error('Server connection test failed:', testError);
-                    throw new Error('Unable to connect to the server. Please check if the server is running.');
-                }
 
                 // Now proceed with the actual booking
-                const response = await fetch('http://localhost:3000/api/bookings', {
+                const response = await fetch('http://localhost:3001/api/bookings', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -274,7 +283,7 @@
                 if (result.bookingId) {
                     confirmation.style.color = 'green';
                     confirmation.innerText = `Booking Confirmed! Booking ID: ${result.bookingId}`;
-                    
+
                     // Store booking locally as backup
                     const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
                     bookings.push({
@@ -283,7 +292,7 @@
                         timestamp: new Date().toISOString()
                     });
                     localStorage.setItem('bookings', JSON.stringify(bookings));
-                    
+
                     // Reset form after successful booking
                     document.getElementById("booking-form").reset();
                     if (selectedMarker) map.removeLayer(selectedMarker);
@@ -294,11 +303,11 @@
             } catch (error) {
                 console.error('Booking error:', error);
                 confirmation.style.color = 'red';
-                
+
                 if (error.name === 'TimeoutError' || error.name === 'AbortError') {
                     confirmation.innerText = 'Server connection timed out. Please try again in a few moments.';
                 } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                    confirmation.innerText = 'Unable to connect to the server. Please check if the server is running at http://localhost:3000';
+                    confirmation.innerText = 'Unable to connect to the server. Please check if the server is running at http://localhost:3001';
                 } else {
                     confirmation.innerText = `Booking failed: ${error.message}`;
                 }
@@ -318,7 +327,7 @@
         }, 100);
 
         // Set minimum date to today
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const dateInput = document.getElementById('date');
             const today = new Date();
             const year = today.getFullYear();
@@ -331,12 +340,12 @@
             // Add validation for time slots
             const timeSelect = document.getElementById('time');
             const currentHour = today.getHours();
-            
+
             // If today's date is selected, disable past time slots
-            dateInput.addEventListener('change', function() {
+            dateInput.addEventListener('change', function () {
                 const selectedDate = new Date(this.value);
                 const isToday = selectedDate.toDateString() === today.toDateString();
-                
+
                 // Enable all options first
                 Array.from(timeSelect.options).forEach(option => {
                     option.disabled = false;
@@ -355,9 +364,9 @@
         });
 
         // Form submission handling
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        document.getElementById('bookingForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             // Get form values
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
@@ -365,7 +374,7 @@
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
             const service = document.getElementById('service').value;
-            
+
             // Create booking details object
             const bookingDetails = {
                 name,
@@ -375,16 +384,17 @@
                 time,
                 service
             };
-            
+
             // Store booking details
             localStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
-            
+
             // Show confirmation message
             alert('Booking submitted successfully! We will contact you shortly to confirm your appointment.');
-            
+
             // Reset form
             this.reset();
         });
     </script>
 </body>
+
 </html>

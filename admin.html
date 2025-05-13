@@ -441,7 +441,7 @@
         // Function to fetch and display bookings
         async function fetchBookings() {
             try {
-                const response = await fetch('http://localhost:3000/api/bookings');
+                const response = await fetch('http://localhost:3001/api/bookings');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -498,16 +498,35 @@
         }
         
         function deleteBooking(id) {
+            console.log('Attempting to delete booking with ID:', id);
+            
             if (confirm('Are you sure you want to delete this booking? This action cannot be undone.')) {
-                fetch(`http://localhost:3000/api/bookings/${id}`, {
-                    method: 'DELETE'
+                const url = `http://localhost:3001/api/bookings/${id}`;
+                console.log('DELETE request to URL:', url);
+                
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
                 .then(response => {
+                    console.log('Response status:', response.status);
                     if (!response.ok) {
-                        throw new Error('Failed to delete booking');
+                        return response.json().then(data => {
+                            throw new Error(data.message || `Server returned ${response.status}: ${response.statusText}`);
+                        });
                     }
-                    alert('Booking deleted successfully');
-                    fetchBookings();
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Delete response:', data);
+                    if (data.success) {
+                        alert('Booking deleted successfully');
+                        fetchBookings();
+                    } else {
+                        throw new Error(data.message || 'Unknown error occurred');
+                    }
                 })
                 .catch(error => {
                     console.error('Error deleting booking:', error);
@@ -529,7 +548,7 @@
                 `;
                 
                 // Fetch queries from the API
-                const response = await fetch('http://localhost:3000/api/queries');
+                const response = await fetch('http://localhost:3001/api/queries');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -607,7 +626,7 @@
         // Function to update query status
         async function updateQueryStatus(id, status) {
             try {
-                const response = await fetch(`http://localhost:3000/api/queries/${id}`, {
+                const response = await fetch(`http://localhost:3001/api/queries/${id}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -633,7 +652,7 @@
         async function deleteQuery(id) {
             if (confirm('Are you sure you want to delete this query? This action cannot be undone.')) {
                 try {
-                    const response = await fetch(`http://localhost:3000/api/queries/${id}`, {
+                    const response = await fetch(`http://localhost:3001/api/queries/${id}`, {
                         method: 'DELETE'
                     });
                     
@@ -657,11 +676,6 @@
             window.location.href = `mailto:${email}?subject=Re: Your query to Majestic Borewells`;
         }
         
-        function logout() {
-            // In a real app, you would clear session/auth tokens
-            alert('Logout functionality would be implemented in a production environment.');
-            window.location.href = 'home.html';
-        }
     </script>
 </body>
 </html>

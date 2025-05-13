@@ -15,7 +15,7 @@ const bookingSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-// Create the model
+// Create the model - use existing model if available to prevent OverwriteModelError
 const Booking = mongoose.models.Booking || mongoose.model('Booking', bookingSchema);
 
 // Create a new booking
@@ -76,13 +76,48 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Add a diagnostic route
-router.get('/test/connection', (req, res) => {
-    res.json({
-        success: true,
-        message: 'Booking API is operational',
-        timestamp: new Date().toISOString()
-    });
+// Delete booking by ID
+router.delete('/:id', async (req, res) => {
+    try {
+        console.log('DELETE REQUEST RECEIVED for booking ID:', req.params.id);
+        
+        // Validate the ID format
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            console.log('Invalid booking ID format:', req.params.id);
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid booking ID format'
+            });
+        }
+        
+        // Find and delete the booking
+        const deletedBooking = await Booking.findByIdAndDelete(req.params.id);
+        
+        // Check if booking was found
+        if (!deletedBooking) {
+            console.log('Booking not found with ID:', req.params.id);
+            return res.status(404).json({
+                success: false,
+                message: 'Booking not found'
+            });
+        }
+        
+        console.log('Booking successfully deleted:', req.params.id);
+        
+        // Return success response
+        res.json({
+            success: true,
+            message: 'Booking deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting booking:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete booking',
+            error: error.message
+        });
+    }
 });
+
 
 module.exports = router;
